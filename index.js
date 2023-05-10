@@ -3,6 +3,14 @@ const nouns = ['cat', 'dog', 'house', 'car', 'tree', 'book', 'computer', 'guitar
 const verbs = ['ran', 'jumped', 'walked', 'drove', 'ate', 'read', 'typed', 'played', 'painted', 'called','swam', 'flew', 'climbed', 'slept', 'woke', 'showered', 'danced', 'sang', 'listened', 'watched','studied', 'worked', 'wrote', 'spoke', 'laughed', 'cried', 'smiled', 'frowned', 'shouted', 'whispered','brushed', 'combed', 'dressed', 'undressed', 'exercised', 'stretched', 'meditated', 'breathed', 'yawned', 'coughed','cleaned', 'organized', 'cooked', 'baked', 'washed', 'dried', 'ironed', 'folded', 'vacuumed', 'dusted','fixed', 'built', 'assembled', 'installed', 'repaired', 'maintained', 'upgraded', 'replaced', 'changed', 'adjusted','met', 'visited', 'greeted', 'hugged', 'kissed', 'dated', 'married', 'divorced', 'broke up', 'missed','dropped', 'picked up', 'delivered', 'mailed', 'emailed', 'called back', 'texted', 'chatted', 'shared', 'uploaded','learned', 'taught', 'mentored', 'coached', 'advised', 'consulted', 'researched', 'analyzed', 'synthesized', 'evaluated','read', 'watched', 'listened to', 'played', 'created', 'designed', 'built', 'developed', 'tested', 'debugged','borrowed', 'lent', 'returned', 'kept', 'gave', 'received', 'earned', 'spent', 'saved', 'invested'];
 const adverbs = ['quickly', 'slowly', 'happily', 'sadly', 'loudly', 'quietly', 'carefully', 'eagerly', 'politely', 'roughly','often', 'never', 'always', 'sometimes', 'rarely', 'frequently', 'constantly', 'occasionally', 'regularly', 'periodically','well', 'badly', 'gracefully', 'awkwardly', 'efficiently', 'inefficiently', 'expertly', 'amateurishly', 'confidently', 'shyly','briefly', 'longingly', 'eventually', 'immediately', 'suddenly', 'gradually', 'simultaneously', 'independently', 'together', 'alone','nearby', 'far away', 'here', 'there', 'everywhere', 'nowhere', 'abroad', 'locally', 'globally', 'nationally','ahead', 'behind', 'upstairs', 'downstairs', 'indoors', 'outdoors', 'upwards', 'downwards', 'eastward', 'westward','likely', 'unlikely', 'certainly', 'possibly', 'maybe', 'definitely', 'absolutely', 'totally', 'completely', 'partially','exactly', 'approximately', 'precisely', 'loosely', 'firmly', 'tightly', 'vaguely', 'clearly', 'distinctly', 'obviously','generally', 'specifically', 'mostly', 'partly', 'largely', 'scarcely', 'barely', 'nearly', 'almost', 'entirely','directly', 'indirectly', 'actively', 'passively', 'positively', 'negatively', 'aggressively', 'peacefully', 'violently'];
 
+var topText = document.getElementsByClassName("text")[0];
+var nextText = document.getElementsByClassName("text")[1];
+var inputText = document.querySelector("body > textarea");
+
+var wpm = 0;
+var wpmTimer = new Date().getTime()
+
+
 function generateSentence() {
   let sentence = '';
   if (Math.random() < 0.3) {
@@ -41,8 +49,8 @@ for (let i = 0; i < 10; i++) {
 
 
 function setUp(){
-  document.getElementsByClassName("text")[0].innerText = capitalizeFirstLetter(removeLeadingSpaces(generateSentence()));
-  document.getElementsByClassName("text")[1].innerText = capitalizeFirstLetter(removeLeadingSpaces(generateSentence()));
+  topText.innerText = capitalizeFirstLetter(removeLeadingSpaces(generateSentence()));
+  nextText.innerText = capitalizeFirstLetter(removeLeadingSpaces(generateSentence()));
 }
 
 document.addEventListener('keydown', function(event) {
@@ -52,13 +60,23 @@ document.addEventListener('keydown', function(event) {
 addEventListener('input', updateText); 
 function updateText(){
   var noDot = !document.querySelector("#noDOt").checked * 1
-  let topText = document.getElementsByClassName("text")[0]
-  let nextText = document.getElementsByClassName("text")[1]
-  let inputText = document.querySelector("body > textarea")
   if(topText.innerText.slice(0,topText.innerText.length - noDot) ==  inputText.value){
     topText.innerText = nextText.innerText
     nextText.innerText = capitalizeFirstLetter(removeLeadingSpaces(generateSentence()));
     inputText.value = ""
+
+
+
+  // Calculate WPM
+  const elapsedTime = (new Date().getTime() - wpmTimer) / 1000; // in seconds
+  const numWords = topText.innerText.split(" ").length;
+  const wpm = Math.round((numWords / elapsedTime) * 60);
+  console.log(elapsedTime)
+
+  document.getElementById("wpm").innerText = `WPM: ${wpm}`; // Display WPM on the page
+
+  // Reset the timer
+  wpmTimer = new Date().getTime()
   }
   colorMismatch()
 }
