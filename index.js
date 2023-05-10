@@ -45,16 +45,21 @@ function setUp(){
   document.getElementsByClassName("text")[1].innerText = capitalizeFirstLetter(removeLeadingSpaces(generateSentence()));
 }
 
+document.addEventListener('keydown', function(event) {
+  document.querySelector("body > textarea").focus()
+});
+
 addEventListener('input', updateText); 
 function updateText(){
-  console.log(document.querySelector("body > textarea").value)
-// var refreshLoop = setInterval(function(){
-  if(document.getElementsByClassName("text")[0].innerText == document.querySelector("body > textarea").value){
-    document.getElementsByClassName("text")[0].innerText = document.getElementsByClassName("text")[1].innerText
-    document.getElementsByClassName("text")[1].innerText = capitalizeFirstLetter(removeLeadingSpaces(generateSentence()));
-    document.querySelector("body > textarea").value = ""
+  var noDot = !document.querySelector("#noDOt").checked * 1
+  let topText = document.getElementsByClassName("text")[0]
+  let nextText = document.getElementsByClassName("text")[1]
+  let inputText = document.querySelector("body > textarea")
+  if(topText.innerText.slice(0,topText.innerText.length - noDot) ==  inputText.value){
+    topText.innerText = nextText.innerText
+    nextText.innerText = capitalizeFirstLetter(removeLeadingSpaces(generateSentence()));
+    inputText.value = ""
   }
-// },100)
   colorMismatch()
 }
 
