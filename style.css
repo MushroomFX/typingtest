@@ -1,3 +1,11 @@
 body{
-    background: black
+    background: black;
+    color:white;
+}
+
+.text {
+    color:gray;
+}
+.text:nth-child(1){
+    color:white
 }
