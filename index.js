@@ -21,7 +21,7 @@ function generateSentence() {
     if (Math.random() < 0.5) {
       sentence += ' ' + adverbs[Math.floor(Math.random() * adverbs.length)];
     }
-    sentence += 'and';
+    sentence += ' and';
   }
   sentence += ' ' + articles[Math.floor(Math.random() * articles.length)];
   sentence += ' ' + nouns[Math.floor(Math.random() * nouns.length)];
