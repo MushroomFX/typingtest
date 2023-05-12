@@ -9,6 +9,7 @@ var inputText = document.querySelector("body > textarea");
 
 var wpm = 0;
 var wpmTimer = new Date().getTime()
+var wpmGraph = [];
 
 
 function generateSentence() {
@@ -20,7 +21,7 @@ function generateSentence() {
     if (Math.random() < 0.5) {
       sentence += ' ' + adverbs[Math.floor(Math.random() * adverbs.length)];
     }
-    sentence += ' and';
+    sentence += 'and';
   }
   sentence += ' ' + articles[Math.floor(Math.random() * articles.length)];
   sentence += ' ' + nouns[Math.floor(Math.random() * nouns.length)];
@@ -73,7 +74,20 @@ function updateText(){
   const wpm = Math.round((numWords / elapsedTime) * 60);
   console.log(elapsedTime)
 
-  document.getElementById("wpm").innerText = `WPM: ${wpm}`; // Display WPM on the page
+
+  wpmGraph.push(wpm)
+  if(wpmGraph.length>100){
+    wpmGraph.shift();
+  }
+
+  const sum = wpmGraph.reduce((a, b) => a + b, 0);
+  const avg = Math.round(10 * (sum / wpmGraph.length) || 0 ) / 10
+
+  generateGraph(wpmGraph,"wpmGraph")
+
+  document.getElementById("lasWpm").innerText = `Last WPM: ${wpm}`; // Display WPM on the page
+  document.getElementById("avgWpm").innerText = `Average WPM: ${avg}`; // Display WPM on the page
+  document.getElementById("wpmGraph").innerText = `Last WPM: ${wpmGraph}`; // Display WPM on the page
 
   // Reset the timer
   wpmTimer = new Date().getTime()
@@ -95,4 +109,73 @@ function colorMismatch() {
 
   const coloredText = `<span style="color: red;">${outputText.substring(0, i)}</span>${outputText.substring(i)}`;
   document.getElementsByClassName("text")[0].innerHTML = coloredText;
+}
+
+
+// function generateGraph(arr, canvasID) {
+//   const canvas = document.getElementById(canvasID);
+//   const context = canvas.getContext('2d');
+//   const width = canvas.width;
+//   const height = canvas.height;
+
+//   const maxValue = Math.max(...arr);
+//   const minValue = Math.min(...arr);
+
+//   const xStep = width / (arr.length - 1);
+//   const yRange = maxValue - minValue;
+//   const yStep = height / yRange;
+
+//   // Clear the canvas
+//   context.clearRect(0, 0, width, height);
+
+//   context.beginPath();
+//   context.moveTo(0, height - ((arr[0] - minValue) * yStep));
+
+//   for (let i = 1; i < arr.length; i++) {
+//     const x = i * xStep;
+//     const y = height - ((arr[i] - minValue) * yStep);
+//     context.lineTo(x, y);
+//   }
+
+//   context.strokeStyle = 'blue';
+//   context.lineWidth = 2;
+//   context.stroke();
+// }
+
+function generateGraph(arr, canvasID) {
+  const canvas = document.getElementById(canvasID);
+  const context = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+
+  const maxValue = Math.max(...arr);
+  const minValue = Math.min(...arr);
+
+  const xStep = width / (arr.length - 1);
+  const yRange = maxValue - minValue;
+  const yStep = height / yRange;
+
+  // Clear the canvas
+  context.clearRect(0, 0, width, height);
+  context.fillStyle = "gray";
+  context.fillRect(0, 0, width, height);
+
+  context.beginPath();
+  context.moveTo(0, height - ((arr[0] - minValue) * yStep));
+
+  for (let i = 1; i < arr.length; i++) {
+    const x = i * xStep;
+    const y = height - ((arr[i] - minValue) * yStep);
+    context.lineTo(x, y);
+  }
+
+  context.strokeStyle = 'blue';
+  context.lineWidth = 2;
+  context.stroke();
+
+  // Draw minimum and maximum indicators
+  context.fillStyle = 'white';
+  context.font = '12px Arial';
+  context.fillText(minValue.toFixed(2), 5, height - 5);
+  context.fillText(maxValue.toFixed(2), 5, 15);
 }
