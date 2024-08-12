@@ -1,4 +1,4 @@
-Test here: https://mushroomfx.github.io/typingtest/
+# Test here: https://mushroomfx.github.io/typingtest/
 
 # TODO
 
