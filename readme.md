@@ -1,3 +1,5 @@
+Test here: https://mushroomfx.github.io/typingtest/
+
 # TODO
 
 ## Planed:
